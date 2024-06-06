@@ -61,20 +61,6 @@ internal class CsvDeserializer<T>
 		return (T)boxed;
 	}
 
-	public bool TryDeserializeRow(string row, out T result)
-	{
-		try
-		{
-			result = DeserializeRow(row);
-			return true;
-		}
-		catch
-		{
-			result = default;
-			return false;
-		}
-	}
-
-	private readonly List<PropertyInfo> props = new List<PropertyInfo>();
-	private readonly List<FieldInfo> fields = new List<FieldInfo>();
+	private readonly List<PropertyInfo> props = [];
+	private readonly List<FieldInfo> fields = [];
 }
