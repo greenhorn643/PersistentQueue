@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace PersistentQueue.Csv.Serializer;
+namespace Persistify.Csv.Serializer;
 
 internal class CsvSerializer<T>
 {
@@ -25,16 +25,23 @@ internal class CsvSerializer<T>
 			fields.Add(field);
 		}
 
-		return string.Join(",", props.Select(p => p.Name).Concat(fields.Select(f => f.Name)));
+		return string.Join(",", props
+			.Select(p => p.Name)
+			.Concat(fields.Select(f => f.Name))
+			.Append("Row Checksum"));
 	}
 
 	public string SerializeRow(T item)
 	{
-		return string.Join(",",
+		var dataCols = string.Join(",",
 			props
 			.Select(p => CsvElement.SerializeElement(p.GetValue(item)!))
 			.Concat(fields
 				.Select(f => CsvElement.SerializeElement(f.GetValue(item)!))));
+
+		return dataCols == ""
+			? Checksum.ToString(Checksum.Calculate(""))
+			: dataCols + $",{Checksum.ToString(Checksum.Calculate(dataCols))}";
 	}
 
 	private readonly List<PropertyInfo> props = [];

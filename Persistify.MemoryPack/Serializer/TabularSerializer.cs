@@ -1,6 +1,6 @@
 ﻿using MemoryPack;
 
-namespace PersistentQueue.MemoryPack.Serializer;
+namespace Persistify.MemoryPack.Serializer;
 
 public class TabularSerializer<TItem> : ITabularSerializer<TItem>
 {

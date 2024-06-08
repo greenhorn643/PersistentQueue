@@ -1,7 +1,7 @@
 ﻿
 using System.Text;
 
-namespace PersistentQueue.Csv.Serializer;
+namespace Persistify.Csv.Serializer;
 
 public class TabularSerializer<TItem> : ITabularSerializer<TItem>
 	where TItem : new()

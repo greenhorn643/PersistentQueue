@@ -1,4 +1,4 @@
-﻿namespace PersistentQueue.Csv.Serializer;
+﻿namespace Persistify.Csv.Serializer;
 
 internal static class CsvElement
 {

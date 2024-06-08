@@ -1,7 +1,7 @@
 ﻿using System.Buffers;
 using System.Text.RegularExpressions;
 
-namespace PersistentQueue.ChunkedFile;
+namespace Persistify.ChunkedFile;
 
 internal struct ChunkedFileConfig
 {

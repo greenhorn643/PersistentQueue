@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace PersistentQueue;
+namespace Persistify;
 
 public class PersistentQueueWriteException(string message) : Exception(message)
 {

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace PersistentQueue.Csv.Serializer;
+namespace Persistify.Csv.Serializer;
 
 internal class CsvDeserializer<T>
 	where T : new()
@@ -14,7 +14,7 @@ internal class CsvDeserializer<T>
 
 		int i = 0;
 
-		for (; i < propAndFieldNames.Length; i++)
+		for (; i < propAndFieldNames.Length - 1; i++)
 		{
 			var propInfo = typeof(T).GetProperty(propAndFieldNames[i]);
 			if (propInfo == null)
@@ -24,21 +24,41 @@ internal class CsvDeserializer<T>
 			props.Add(propInfo);
 		}
 
-		for (; i < propAndFieldNames.Length; i++)
+		for (; i < propAndFieldNames.Length - 1; i++)
 		{
 			var fieldInfo = typeof(T).GetField(propAndFieldNames[i])
 				?? throw new Exception($"no such field \"{propAndFieldNames[i]}\" on type \"{typeof(T)}\"");
 			fields.Add(fieldInfo);
 		}
+
+		if (propAndFieldNames[^1] != "Row Checksum")
+		{
+			throw new Exception($"missing column \"Row Checksum\"");
+		}
 	}
 
 	public T DeserializeRow(string row)
 	{
+		var lastComma = row.LastIndexOf(',');
+
+		var expectedChecksum = lastComma == -1
+			? Checksum.Calculate("")
+			: Checksum.Calculate(row[..lastComma]);
+
+		var actualChecksum = Checksum.FromString(row[(lastComma + 1)..]);
+
+		if (expectedChecksum != actualChecksum)
+		{
+			throw new ChecksumException(
+				$"invalid checksum: expected {Checksum.ToString(expectedChecksum)}" +
+				$", found {Checksum.ToString(actualChecksum)}");
+		}
+
 		var propAndFieldVals = CsvElement.SplitAndUnescapeElementStrings(row);
 
-		if (propAndFieldVals.Count != props.Count + fields.Count)
+		if (propAndFieldVals.Count != props.Count + fields.Count + 1)
 		{
-			throw new Exception($"expected {props.Count + fields.Count} comma-separated values; found {propAndFieldVals.Count}");
+			throw new Exception($"expected {props.Count + fields.Count + 1} comma-separated values; found {propAndFieldVals.Count}");
 		}
 
 		var result = new T();

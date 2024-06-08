@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PersistentQueue\PersistentQueue.csproj" />
+    <ProjectReference Include="..\Persistify\Persistify.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿using PersistentQueue.MemoryPack.Serializer;
+﻿using Persistify.MemoryPack.Serializer;
 
-namespace PersistentQueue.MemoryPack;
+namespace Persistify.MemoryPack;
 
 public static class PersistentMemoryPackQueue
 {

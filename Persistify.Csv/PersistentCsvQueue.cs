@@ -1,6 +1,6 @@
-﻿using PersistentQueue.Csv.Serializer;
+﻿using Persistify.Csv.Serializer;
 
-namespace PersistentQueue.Csv;
+namespace Persistify.Csv;
 
 public static class PersistentCsvQueue
 {
