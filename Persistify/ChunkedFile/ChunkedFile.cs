@@ -15,6 +15,10 @@ internal class ChunkedFileCorruptionException(string message) : Exception(messag
 {
 }
 
+internal class ChunkedFileSizeException(string message) : Exception(message)
+{
+}
+
 internal class ChunkedFile : IDisposable
 {
 	public string FilePath { get; }
@@ -29,8 +33,8 @@ internal class ChunkedFile : IDisposable
 		ChunkSize = config.ChunkSize;
 		MaxChunksPerFile = config.MaxChunksPerFile;
 		ChunkFileExtension = config.ChunkFileExtension;
-		currentChunkSize = 0;
-		chunkIndex = 0;
+		currentChunkSize = config.ChunkSize;
+		chunkIndex = -1;
 
 		Directory.CreateDirectory(FilePath);
 		writeStream = null;
@@ -38,6 +42,11 @@ internal class ChunkedFile : IDisposable
 
 	public bool TryAppend(ReadOnlySpan<byte> buffer)
 	{
+		if (buffer.Length > ChunkSize)
+		{
+			throw new ChunkedFileSizeException($"chunk size {ChunkSize} too small to write buffer of size {buffer.Length}");
+		}
+
 		if (currentChunkSize + buffer.Length > ChunkSize)
 		{
 			if (chunkIndex >= MaxChunksPerFile - 1)
