@@ -123,6 +123,15 @@ internal class ChunkedFile : IDisposable
 		Directory.Delete(filePath, true);
 	}
 
+	public static void Replace(string sourceFilePath, string destinationFilePath)
+	{
+		if (Directory.Exists(destinationFilePath))
+		{
+			Directory.Delete(destinationFilePath, true);
+		}
+		Directory.Move(sourceFilePath, destinationFilePath);
+	}
+
 	private void ExecuteWrite(ReadOnlySpan<byte> buffer)
 	{
 		if (writeStream == null)

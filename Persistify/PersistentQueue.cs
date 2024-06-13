@@ -109,27 +109,42 @@ public class PersistentQueue<TItem, TSerializer> : IDisposable
 
 	public void ReplaceFrontFile(List<TItem> items)
 	{
-		var tmpFile = TmpFilePath();
-		var tmpChunkedFile = new ChunkedFile.ChunkedFile(
-			new ChunkedFile.ChunkedFileConfig
-			{
-				FilePath = tmpFile,
-				ChunkSize = ChunkSize,
-				MaxChunksPerFile = 999999,
-				ChunkFileExtension = serializer.FileExtension,
-			});
-
-		tmpChunkedFile.TryAppend(serializer.SerializeHeaders());
-
-		foreach (var item in items)
+		if (items.Count == 0)
 		{
-			tmpChunkedFile.TryAppend(serializer.SerializeRow(item));
+			PopFile();
+			return;
+		}
+
+		var tmpFile = TmpFilePath();
+
+		{
+			using var tmpChunkedFile = new ChunkedFile.ChunkedFile(
+				new ChunkedFile.ChunkedFileConfig
+				{
+					FilePath = tmpFile,
+					ChunkSize = ChunkSize,
+					MaxChunksPerFile = 999999,
+					ChunkFileExtension = serializer.FileExtension,
+				});
+
+			if (!tmpChunkedFile.TryAppend(serializer.SerializeHeaders()))
+			{
+				throw new PersistentQueueWriteException("unable to write to chunked file; most likely chunked file parameters are set too small");
+			}
+
+			foreach (var item in items)
+			{
+				if (!tmpChunkedFile.TryAppend(serializer.SerializeRow(item)))
+				{
+					throw new PersistentQueueWriteException("unable to write to chunked file; most likely chunked file parameters are set too small");
+				}
+			}
 		}
 
 		lock (syncRoot)
 		{
 			var readFile = readFiles.Peek();
-			File.Move(tmpFile, readFile);
+			ChunkedFile.ChunkedFile.Replace(tmpFile, readFile);
 		}
 	}
 
@@ -184,7 +199,7 @@ public class PersistentQueue<TItem, TSerializer> : IDisposable
 
 	private string UnrecoverablePath()
 	{
-		return queueDirPath + "\\unrecoverable\\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff");
+		return queueDirPath + "\\unrecoverable\\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss-ffffff") + "." + serializer.FileExtension;
 	}
 
 	public PersistentQueue(string queueDirPath, TSerializer serializer, int chunkSize = 4096, int maxChunksPerFile = 1000)

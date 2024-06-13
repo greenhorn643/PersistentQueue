@@ -187,4 +187,10 @@ public class Persistify_ChunkedFile
 			Assert.AreEqual(l, r);
 		}
 	}
+
+	[TestCleanup]
+	public void Teardown()
+	{
+		Directory.Delete(testDirectory, true);
+	}
 }
