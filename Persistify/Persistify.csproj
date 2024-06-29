@@ -4,10 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ByteBuffer" Version="1.0.7" />
+    <PackageReference Include="ByteBuffer" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
