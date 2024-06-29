@@ -14,7 +14,7 @@ public interface ITabularSerializer<TItem>
 	List<TItem> DeserializeTable(Buffer buffer);
 }
 
-public class PersistentQueue<TItem, TSerializer> : IDisposable
+public class PersistentQueue<TItem, TSerializer> : IPersistentQueue<TItem>
 	where TItem : new()
 	where TSerializer : ITabularSerializer<TItem>
 {
@@ -223,7 +223,7 @@ public class PersistentQueue<TItem, TSerializer> : IDisposable
 		}
 	}
 
-	static bool IsValidPqfFileName(string filePath)
+	private static bool IsValidPqfFileName(string filePath)
 	{
 		var rx = new Regex(
 			@"\\\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2}-\d{6}$",
