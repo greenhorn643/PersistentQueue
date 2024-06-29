@@ -1,4 +1,5 @@
 using Persistify.Csv.Serializer;
+using UnicodeRandom;
 
 namespace Persistify.Test;
 
@@ -103,7 +104,7 @@ public class Persistify_Csv_Serializer
 			Assert.AreNotEqual(-1, lastCommaIdx);
 
 			string corruptedRow =
-				rng.NextString(0, 256) + row[lastCommaIdx..];
+				rng.NextUnicodeString(0, 256) + row[lastCommaIdx..];
 
 			try
 			{

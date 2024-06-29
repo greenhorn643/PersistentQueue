@@ -15,6 +15,7 @@
     <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="Nito.Collections.Deque" Version="1.2.1" />
+    <PackageReference Include="UnicodeRandom" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

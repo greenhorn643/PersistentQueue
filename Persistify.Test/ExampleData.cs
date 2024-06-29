@@ -1,4 +1,6 @@
-﻿namespace Persistify.Test;
+﻿using UnicodeRandom;
+
+namespace Persistify.Test;
 
 public struct Empty { }
 
@@ -20,13 +22,13 @@ public struct ExampleData
 	{
 		return new ExampleData
 		{
-			a = rng.NextString(0, 10),
+			a = rng.NextUnicodeString(0, 10),
 			b = rng.NextDateTime(),
 			c = rng.Next(int.MinValue, int.MaxValue),
 			d = rng.NextDouble(),
 			e = rng.NextDecimal(),
 
-			A = rng.NextString(0, 10),
+			A = rng.NextUnicodeString(0, 10),
 			B = rng.NextDateTime(),
 			C = rng.Next(int.MinValue, int.MaxValue),
 			D = rng.NextDouble(),
